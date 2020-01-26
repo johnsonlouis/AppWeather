@@ -1,0 +1,6 @@
+black : #000000
+white : #FFFFFF
+blue : #3885AF
+gray : #494949
+yellow : #f7c544
+red : #ed6341

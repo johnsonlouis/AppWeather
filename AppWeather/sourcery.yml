@@ -1,0 +1,13 @@
+sources:
+    - AppWeatherTests
+templates:
+    - SourceryTemplates/AutoMockable.stencil
+    - SourceryTemplates/AutoEquatable.stencil
+project:
+  file: AppWeather.xcodeproj
+  target:
+    name: AppWeather
+    module: AppWeather
+output: AppWeatherTests/Generated/Sourcery/Mocks.swift
+args:
+  testableImport: "AppWeatherTest"
