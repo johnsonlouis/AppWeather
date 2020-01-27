@@ -1,5 +1,6 @@
 disabled_rules: # rule identifiers to exclude from running
   - nesting
+  - trailing_whitespace
 opt_in_rules:
 - empty_count
 - empty_string
@@ -7,6 +8,7 @@ excluded:
 - Carthage
 - Pods
 - SwiftLint/Common/3rdPartyLib
+- AppWeatherTests
 line_length:
     warning: 150
     error: 200
@@ -29,4 +31,7 @@ file_length:
 cyclomatic_complexity:
     warning: 15
     error: 25
+identifier_name:
+  excluded: # excluded via string array
+    - id
 reporter: "xcode"

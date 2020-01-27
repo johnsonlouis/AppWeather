@@ -13,25 +13,33 @@
 import UIKit
 
 protocol SplashBusinessLogic {
-  func doSomething(request: Splash.FetchContents.Request)
+    func doSomething(request: Splash.FetchContents.Request)
 }
 
 protocol SplashDataStore {}
 
 class SplashInteractor: SplashDataStore {
-  var presenter: SplashPresentationLogic?
-  var worker: SplashWorker?
+
+	// MARK: - Property
+
+	var presenter: SplashPresentationLogic?
+    let worker: SplashWorkerProtocol
+
+	// MARK: - Initialize
+
+	init(worker: SplashWorkerProtocol) {
+		self.worker = worker
+	}
 }
 
 // MARK: - SplashBusinessLogic
 
 extension SplashInteractor: SplashBusinessLogic {
 
-    func doSomething(request: Splash.FetchContents.Request) {
-      worker = SplashWorker()
-      worker?.doSomeWork()
-
-      let response = Splash.FetchContents.Response()
-      presenter?.presentSomething(response: response)
+	func doSomething(request: Splash.FetchContents.Request) {
+		worker.fetchContents { [weak self] in
+			let response = Splash.FetchContents.Response()
+			self?.presenter?.presentContents(response: response)
+		}
     }
 }

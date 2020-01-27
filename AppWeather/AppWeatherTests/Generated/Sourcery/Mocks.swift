@@ -4,7 +4,7 @@
 
 // swiftlint:disable file_length
 
-@testable import AppWeatherTest
+@testable import AppWeather
 
 fileprivate func compareOptionals<T>(lhs: T?, rhs: T?, compare: (_ lhs: T, _ rhs: T) -> Bool) -> Bool {
     switch (lhs, rhs) {
@@ -41,7 +41,7 @@ import UIKit
 import AppKit
 #endif
 
-@testable import AppWeatherTest
+@testable import AppWeather
 
 
 

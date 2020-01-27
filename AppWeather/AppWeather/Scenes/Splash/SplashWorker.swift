@@ -12,9 +12,24 @@
 
 import UIKit
 
-class SplashWorker
-{
-  func doSomeWork()
-  {
-  }
+protocol SplashWorkerProtocol {
+	func fetchContents(completionHandler: @escaping () -> Void)
+}
+
+class SplashWorker {
+
+	// MARK: - Enum
+
+	enum Constant {
+		static let waitTime: Double = 2 // In seconds
+	}
+}
+
+// MARK: - SplashWorkerProtocol
+
+extension SplashWorker: SplashWorkerProtocol {
+
+	func fetchContents(completionHandler: @escaping () -> Void) {
+		DispatchQueue.main.asyncAfter(deadline: .now() + Constant.waitTime, execute: completionHandler)
+	}
 }

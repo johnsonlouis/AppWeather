@@ -13,24 +13,40 @@
 import UIKit
 
 protocol HomeBusinessLogic {
-    func doSomething(request: Home.Something.Request)
+    func fetchContents(request: Home.FetchContents.Request)
 }
 
-protocol HomeDataStore {
-}
+protocol HomeDataStore {}
 
-class HomeInteractor: HomeBusinessLogic, HomeDataStore {
+class HomeInteractor: HomeDataStore {
+
+    // MARK: - Property
+
     var presenter: HomePresentationLogic?
-    var worker: HomeWorker?
-    //var name: String = ""
+    private let worker: HomeWorkerProtocol
 
-    // MARK: Do something
+    init(worker: HomeWorkerProtocol) {
+        self.worker = worker
+    }
+}
 
-    func doSomething(request: Home.Something.Request) {
-        worker = HomeWorker()
-        worker?.doSomeWork()
+// MARK: - HomeBusinessLogic
 
-        let response = Home.Something.Response()
-        presenter?.presentSomething(response: response)
+extension HomeInteractor: HomeBusinessLogic {
+
+    func fetchContents(request: Home.FetchContents.Request) {
+        worker.fetchInfos { [weak self] result in
+            switch result {
+            case .success(let home):
+                let response = Home.FetchContents.Response(cityName: home.city,
+                                                           description: home.description,
+                                                           currentTemperature: home.currentTemperature,
+                                                           days: home.daysInfo)
+                self?.presenter?.presentFetchedContents(response: response)
+            case .failure(let error):
+                let response = Home.FetchContentsError.Response(error: error)
+                self?.presenter?.presentFetchedContentsError(response: response)
+            }
+        }
     }
 }

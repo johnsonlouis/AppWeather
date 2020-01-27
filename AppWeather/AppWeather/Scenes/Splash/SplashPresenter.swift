@@ -13,14 +13,14 @@
 import UIKit
 
 protocol SplashPresentationLogic {
-  func presentSomething(response: Splash.FetchContents.Response)
+    func presentContents(response: Splash.FetchContents.Response)
 }
 
 class SplashPresenter: SplashPresentationLogic {
-  weak var viewController: SplashDisplayLogic?
+    weak var viewController: SplashDisplayLogic?
 
-  func presentSomething(response: Splash.FetchContents.Response) {
-    let viewModel = Splash.FetchContents.ViewModel()
-    viewController?.displayHome(viewModel: viewModel)
-  }
+	func presentContents(response: Splash.FetchContents.Response) {
+        let viewModel = Splash.FetchContents.ViewModel()
+        viewController?.displayContents(viewModel: viewModel)
+    }
 }

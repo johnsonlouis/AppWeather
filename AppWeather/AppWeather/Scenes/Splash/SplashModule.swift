@@ -18,7 +18,8 @@ enum SplashModule {
 
     static func makeView() -> UIViewController {
         let viewController = StoryboardScene.Main.initialScene.instantiate()
-        let interactor = SplashInteractor()
+		let worker = SplashWorker()
+        let interactor = SplashInteractor(worker: worker)
         let presenter = SplashPresenter()
         let router = SplashRouter()
         viewController.interactor = interactor

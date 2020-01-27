@@ -13,9 +13,9 @@
 import UIKit
 
 enum Splash {
-  enum FetchContents {
-    struct Request {}
-    struct Response {}
-    struct ViewModel {}
-  }
+    enum FetchContents {
+        struct Request {}
+        struct Response {}
+        struct ViewModel {}
+    }
 }

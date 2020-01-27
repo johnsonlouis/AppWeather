@@ -12,48 +12,143 @@
 
 import UIKit
 
-protocol HomeDisplayLogic: class
-{
-  func displaySomething(viewModel: Home.Something.ViewModel)
+protocol HomeDisplayLogic: class {
+    func displayFetchedContents(viewModel: Home.FetchContents.ViewModel)
+    func displayFetchedContentsError(viewModel: Home.FetchContentsError.ViewModel)
 }
 
-class HomeViewController: UIViewController, HomeDisplayLogic
-{
-  var interactor: HomeBusinessLogic?
-  var router: (NSObjectProtocol & HomeRoutingLogic & HomeDataPassing)?
-  
-  // MARK: Routing
-  
-  override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-  {
-    if let scene = segue.identifier {
-      let selector = NSSelectorFromString("routeTo\(scene)WithSegue:")
-      if let router = router, router.responds(to: selector) {
-        router.perform(selector, with: segue)
-      }
+class HomeViewController: UIViewController {
+
+	// MARK: - Constant
+
+	private enum Constant {
+		static let animationDuration = 0.25
+        enum Font {
+            static let nameLabel = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 30: 24)
+            static let descriptionLabel = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 24: 18)
+            static let temperatureLabel = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 80: 80)
+        }
     }
-  }
-  
-  // MARK: View lifecycle
-  
-  override func viewDidLoad()
-  {
-    super.viewDidLoad()
-    doSomething()
-  }
-  
-  // MARK: Do something
-  
-  //@IBOutlet weak var nameTextField: UITextField!
-  
-  func doSomething()
-  {
-    let request = Home.Something.Request()
-    interactor?.doSomething(request: request)
-  }
-  
-  func displaySomething(viewModel: Home.Something.ViewModel)
-  {
-    //nameTextField.text = viewModel.name
-  }
+
+	// MARK: - Property
+
+	var interactor: HomeBusinessLogic?
+    var router: (NSObjectProtocol & HomeRoutingLogic & HomeDataPassing)?
+    private var viewModel: Home.FetchContents.ViewModel?
+
+	// MARK: - IBOutlet
+
+	@IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var temperatureLabel: UILabel!
+	@IBOutlet weak var indicatorView: UIActivityIndicatorView!
+
+	// MARK: - View lifecycle
+
+	override func viewDidLoad() {
+        super.viewDidLoad()
+        fetchContent()
+        setupUI()
+        setupTableView()
+    }
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		navigationController?.setNavigationBarHidden(false, animated: animated)
+	}
+
+	// MARK: - Private
+
+	private func fetchContent() {
+		indicatorView.isHidden = false
+        let request = Home.FetchContents.Request()
+        interactor?.fetchContents(request: request)
+    }
+
+	private func setupUI() {
+        view.backgroundColor = ColorName.blue.color
+        nameLabel.textColor = ColorName.white.color
+        nameLabel.font = Constant.Font.nameLabel
+        nameLabel.alpha = 0
+
+		descriptionLabel.textColor = ColorName.white.color
+        descriptionLabel.font = Constant.Font.descriptionLabel
+        descriptionLabel.alpha = 0
+
+		temperatureLabel.textColor = ColorName.white.color
+        temperatureLabel.font = Constant.Font.temperatureLabel
+        temperatureLabel.alpha = 0
+
+		tableView.backgroundColor = .clear
+        tableView.separatorStyle = .none
+        tableView.alpha = 0
+
+		let textAttributes = [NSAttributedString.Key.foregroundColor: ColorName.black.color]
+        navigationController?.navigationBar.titleTextAttributes = textAttributes
+		title = L10n.Home.title
+    }
+
+	private func setupTableView() {
+        tableView.register(HomeTableViewCell.nib, forCellReuseIdentifier: "HomeTableViewCell")
+    }
 }
+
+// MARK: - HomeDisplayLogic
+
+extension HomeViewController: HomeDisplayLogic {
+
+	func displayFetchedContents(viewModel: Home.FetchContents.ViewModel) {
+        self.viewModel = viewModel
+		indicatorView.isHidden = true
+        nameLabel.text = viewModel.name
+        descriptionLabel.text = viewModel.description
+        temperatureLabel.text = viewModel.currentTemperature
+		UIView.animate(withDuration: Constant.animationDuration) {
+            self.nameLabel.alpha = 1
+            self.descriptionLabel.alpha = 1
+            self.temperatureLabel.alpha = 1
+            self.tableView.alpha = 1
+        }
+        tableView.reloadData()
+    }
+
+	func displayFetchedContentsError(viewModel: Home.FetchContentsError.ViewModel) {
+		indicatorView.isHidden = true
+        let alert = UIAlertController(title: viewModel.title,
+                                      message: viewModel.message,
+                                      preferredStyle: .alert)
+        let action = UIAlertAction(title: viewModel.actionTitle, style: .default) { _ in
+            self.dismiss(animated: true, completion: nil)
+        }
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: - UITableViewDataSource
+
+extension HomeViewController: UITableViewDataSource {
+
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel?.days.count ?? 0
+    }
+
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "HomeTableViewCell",
+                                                       for: indexPath) as? HomeTableViewCell,
+            let viewModel = viewModel?.days[indexPath.row] else {
+                return UITableViewCell()
+        }
+        let cellViewModel = HomeTableViewCellViewModel(name: viewModel.name,
+													   imageUrl: viewModel.imageUrl,
+                                                       max: viewModel.max,
+                                                       min: viewModel.min)
+        cell.configure(viewModel: cellViewModel)
+        return cell
+    }
+}
+
+// MARK: - UITableViewDelegate
+
+extension HomeViewController: UITableViewDelegate {}

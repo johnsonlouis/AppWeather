@@ -14,7 +14,7 @@ ib:
       ignoreTargetModule: true
 strings:
   inputs:
-    - AppWeather/Resources/AppWeather-localizable.strings
+    - AppWeather/Resources/en.lproj/AppWeather-localizable.strings
   outputs:
     - templateName: structured-swift4
       output: Strings.swift

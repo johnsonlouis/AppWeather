@@ -12,9 +12,76 @@
 
 import UIKit
 
-class HomeWorker
-{
-  func doSomeWork()
-  {
-  }
+protocol HomeWorkerProtocol {
+    func fetchInfos(completionHandler: @escaping (Result<HomeInfo, Error>) -> Void)
+}
+
+class HomeWorker {
+
+    // MARK: - Property
+
+    let network: NetworkProtocol
+
+    // MARK: - Lifecycle
+
+    init(network: NetworkProtocol) {
+        self.network = network
+    }
+}
+
+// MARK: - HomeWorkerProtocol
+
+extension HomeWorker: HomeWorkerProtocol {
+
+	func fetchInfos(completionHandler: @escaping (Result<HomeInfo, Error>) -> Void) {
+        let url = "https://api.openweathermap.org/data/2.5/forecast"
+        let parameters = ["id": "6455259",
+                          "appid": "5c9a5519f58bd542743e739b83ad4c2f",
+                          "lang": "fr",
+                          "units": "metric"]
+        let ressource = NetworkResource(url: url, parameters: parameters)
+        network.request(resource: ressource, type: ResultJSON.self) {
+            switch $0 {
+            case .success(let decodable):
+                guard let resultJSON = decodable as? ResultJSON else {
+                    return
+                }
+                var groupedItems: [String: [ResultItemJSON]] = [:]
+                resultJSON.list.forEach {
+                    if let forecastedTimeIsoFormatted = $0.forecastedTimeIsoFormatted {
+                        if groupedItems[forecastedTimeIsoFormatted] == nil {
+                            groupedItems[forecastedTimeIsoFormatted] = []
+                        }
+                        groupedItems[forecastedTimeIsoFormatted]?.append($0)
+                        groupedItems[forecastedTimeIsoFormatted] = groupedItems[forecastedTimeIsoFormatted]?.sorted(by: { $0.main.temperature < $1.main.temperature })
+                    }
+                }
+
+                let days: [DayInfo] = groupedItems.compactMap {
+                    guard let minTemperature = $0.value.first?.main.temperature,
+                        let maxTemperature = $0.value.last?.main.temperature,
+                        let date = $0.value.first?.forecastedTimeDate else {
+                            return nil
+                    }
+
+					var iconUrl: String?
+					if let icon = $0.value.first?.weather.first?.icon {
+						iconUrl = "http://openweathermap.org/img/wn/\(icon)@2x.png"
+					}
+                    return DayInfo(date: date,
+                                   minTemperature: minTemperature,
+								   maxTemperature: maxTemperature,
+								   iconUrl: iconUrl)
+                }
+                let sortedItems = days.sorted(by: { $0.date < $1.date })
+                let home = HomeInfo(city: resultJSON.city.name,
+                                    description: resultJSON.list.first?.weather.first?.description,
+                                    currentTemperature: resultJSON.list.first?.main.temperature,
+                                    daysInfo: sortedItems)
+                completionHandler(.success(home))
+            case .failure(let error):
+                completionHandler(.failure(error))
+            }
+        }
+    }
 }

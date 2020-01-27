@@ -13,26 +13,37 @@
 import UIKit
 
 protocol SplashDisplayLogic: class {
-    func displayHome(viewModel: Splash.FetchContents.ViewModel)
+    func displayContents(viewModel: Splash.FetchContents.ViewModel)
 }
 
 class SplashViewController: UIViewController {
 
-    // MARK: - Property
+	// MARK: - Property
 
-    var interactor: SplashBusinessLogic?
+	var interactor: SplashBusinessLogic?
     var router: (NSObjectProtocol & SplashRoutingLogic & SplashDataPassing)?
 
-    // MARK: - View lifecycle
+	// MARK: - IBOutlet
+
+	@IBOutlet weak var indicatorView: UIActivityIndicatorView!
+
+	// MARK: - View lifecycle
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		navigationController?.setNavigationBarHidden(true, animated: animated)
+	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
+		view.backgroundColor = ColorName.blue.color
         fetchContents()
     }
 
-    // MARK: - Private
+	// MARK: - Private
 
     private func fetchContents() {
+		indicatorView.isHidden = false
         let request = Splash.FetchContents.Request()
         interactor?.doSomething(request: request)
     }
@@ -42,7 +53,8 @@ class SplashViewController: UIViewController {
 
 extension SplashViewController: SplashDisplayLogic {
 
-    func displayHome(viewModel: Splash.FetchContents.ViewModel) {
+	func displayContents(viewModel: Splash.FetchContents.ViewModel) {
+		indicatorView.isHidden = true
         router?.routeToHome()
     }
 }

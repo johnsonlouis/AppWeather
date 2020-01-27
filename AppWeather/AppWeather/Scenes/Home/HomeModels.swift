@@ -12,20 +12,40 @@
 
 import UIKit
 
-enum Home
-{
-  // MARK: Use cases
-  
-  enum Something
-  {
-    struct Request
-    {
+enum Home {
+
+    enum FetchContents {
+        struct Request {
+        }
+        struct Response {
+            let cityName: String
+            let description: String?
+            let currentTemperature: Float?
+            let days: [DayInfo]
+        }
+        struct ViewModel {
+            let name: String
+            let description: String
+            let currentTemperature: String
+            let days: [Days]
+
+            struct Days {
+                let name: String
+                let max: String
+                let min: String
+				let imageUrl: String?
+            }
+        }
     }
-    struct Response
-    {
+
+    enum FetchContentsError {
+        struct Response {
+            let error: Error
+        }
+        struct ViewModel {
+            let title: String
+            let message: String
+            let actionTitle: String
+        }
     }
-    struct ViewModel
-    {
-    }
-  }
 }

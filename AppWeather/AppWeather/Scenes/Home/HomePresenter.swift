@@ -12,20 +12,41 @@
 
 import UIKit
 
-protocol HomePresentationLogic
-{
-  func presentSomething(response: Home.Something.Response)
+protocol HomePresentationLogic {
+    func presentFetchedContents(response: Home.FetchContents.Response)
+    func presentFetchedContentsError(response: Home.FetchContentsError.Response)
 }
 
-class HomePresenter: HomePresentationLogic
-{
-  weak var viewController: HomeDisplayLogic?
-  
-  // MARK: Do something
-  
-  func presentSomething(response: Home.Something.Response)
-  {
-    let viewModel = Home.Something.ViewModel()
-    viewController?.displaySomething(viewModel: viewModel)
-  }
+class HomePresenter {
+    weak var viewController: HomeDisplayLogic?
+}
+
+// MARK: - HomePresentationLogic
+
+extension HomePresenter: HomePresentationLogic {
+
+	func presentFetchedContents(response: Home.FetchContents.Response) {
+        let days = response.days.map {
+            Home.FetchContents.ViewModel.Days(name: $0.date.dayAsString,
+                                              max: String(format: "%.0f", $0.maxTemperature),
+                                              min: String(format: "%.0f", $0.minTemperature),
+											  imageUrl: $0.iconUrl)
+        }
+        let viewModel = Home.FetchContents.ViewModel(name: response.cityName,
+                                                     description: response.description ?? "",
+                                                     currentTemperature: String(format: "%.0f°", response.currentTemperature ?? ""),
+                                                     days: days)
+        DispatchQueue.main.async { [weak self] in
+            self?.viewController?.displayFetchedContents(viewModel: viewModel)
+        }
+    }
+
+	func presentFetchedContentsError(response: Home.FetchContentsError.Response) {
+		let viewModel = Home.FetchContentsError.ViewModel(title: L10n.Alert.title,
+														  message: L10n.Alert.message,
+														  actionTitle: L10n.Alert.Action.title)
+        DispatchQueue.main.async { [weak self] in
+            self?.viewController?.displayFetchedContentsError(viewModel: viewModel)
+        }
+    }
 }

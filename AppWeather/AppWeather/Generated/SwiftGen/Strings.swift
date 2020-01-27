@@ -11,6 +11,27 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name
 internal enum L10n {
+
+  internal enum Alert {
+    /// Error when fetching datas.
+    internal static let message = L10n.tr("AppWeather-localizable", "alert.message")
+    /// Error
+    internal static let title = L10n.tr("AppWeather-localizable", "alert.title")
+    internal enum Action {
+      /// Close
+      internal static let title = L10n.tr("AppWeather-localizable", "alert.action.title")
+    }
+  }
+
+  internal enum Detail {
+    /// Details
+    internal static let title = L10n.tr("AppWeather-localizable", "detail.title")
+  }
+
+  internal enum Home {
+    /// Home
+    internal static let title = L10n.tr("AppWeather-localizable", "home.title")
+  }
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name

@@ -12,7 +12,8 @@ enum HomeModule {
 
     static func makeView() -> UIViewController {
         let viewController = StoryboardScene.Main.homeViewController.instantiate()
-        let interactor = HomeInteractor()
+        let worker = HomeWorker(network: Network())
+        let interactor = HomeInteractor(worker: worker)
         let presenter = HomePresenter()
         let router = HomeRouter()
         viewController.interactor = interactor
