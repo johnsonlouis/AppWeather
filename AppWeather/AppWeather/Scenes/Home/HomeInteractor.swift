@@ -16,14 +16,19 @@ protocol HomeBusinessLogic {
     func fetchContents(request: Home.FetchContents.Request)
 }
 
-protocol HomeDataStore {}
+protocol HomeDataStore {
+	var cityId: Int? { get set }
+}
 
 class HomeInteractor: HomeDataStore {
+
+	// MARK: - Enum
 
     // MARK: - Property
 
     var presenter: HomePresentationLogic?
     private let worker: HomeWorkerProtocol
+	var cityId: Int?
 
     init(worker: HomeWorkerProtocol) {
         self.worker = worker
@@ -35,7 +40,12 @@ class HomeInteractor: HomeDataStore {
 extension HomeInteractor: HomeBusinessLogic {
 
     func fetchContents(request: Home.FetchContents.Request) {
-        worker.fetchInfos { [weak self] result in
+		guard let cityId = cityId else {
+			let response = Home.FetchContentsError.Response(error: AppWeatherError.invalidCityId)
+			presenter?.presentFetchedContentsError(response: response)
+			return
+		}
+		worker.fetchInfos(cityId: cityId) { [weak self] result in
             switch result {
             case .success(let home):
                 let response = Home.FetchContents.Response(cityName: home.city,

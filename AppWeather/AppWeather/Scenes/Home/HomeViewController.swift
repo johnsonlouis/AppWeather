@@ -23,10 +23,16 @@ class HomeViewController: UIViewController {
 
 	private enum Constant {
 		static let animationDuration = 0.25
-        enum Font {
-            static let nameLabel = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 30: 24)
-            static let descriptionLabel = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 24: 18)
-            static let temperatureLabel = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 80: 80)
+
+		enum Font {
+			enum Label {
+				static let name = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 30: 24)
+				static let description = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 24: 18)
+				static let temperature = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 80: 80)
+			}
+			enum Button {
+				static let detail = UIFont(name: "HelveticaNeue", size: 16)
+			}
         }
     }
 
@@ -43,6 +49,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var temperatureLabel: UILabel!
 	@IBOutlet weak var indicatorView: UIActivityIndicatorView!
+	@IBOutlet weak var detailButton: UIButton!
 
 	// MARK: - View lifecycle
 
@@ -58,6 +65,12 @@ class HomeViewController: UIViewController {
 		navigationController?.setNavigationBarHidden(false, animated: animated)
 	}
 
+	// MARK: - IBAction
+
+	@IBAction func didTapDetail(_ sender: Any) {
+		router?.routeToDetail()
+	}
+
 	// MARK: - Private
 
 	private func fetchContent() {
@@ -69,20 +82,27 @@ class HomeViewController: UIViewController {
 	private func setupUI() {
         view.backgroundColor = ColorName.blue.color
         nameLabel.textColor = ColorName.white.color
-        nameLabel.font = Constant.Font.nameLabel
+		nameLabel.font = Constant.Font.Label.name
         nameLabel.alpha = 0
 
 		descriptionLabel.textColor = ColorName.white.color
-        descriptionLabel.font = Constant.Font.descriptionLabel
+		descriptionLabel.font = Constant.Font.Label.description
         descriptionLabel.alpha = 0
 
 		temperatureLabel.textColor = ColorName.white.color
-        temperatureLabel.font = Constant.Font.temperatureLabel
+		temperatureLabel.font = Constant.Font.Label.temperature
         temperatureLabel.alpha = 0
 
 		tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.alpha = 0
+
+		detailButton.backgroundColor = ColorName.white.color
+		detailButton.layer.cornerRadius = detailButton.bounds.height / 2
+		detailButton.layer.masksToBounds = true
+		detailButton.setTitle(L10n.Home.Detail.button, for: .normal)
+		detailButton.setTitleColor(ColorName.blue.color, for: .normal)
+		detailButton.titleLabel?.font = Constant.Font.Button.detail
 
 		let textAttributes = [NSAttributedString.Key.foregroundColor: ColorName.black.color]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
@@ -90,7 +110,8 @@ class HomeViewController: UIViewController {
     }
 
 	private func setupTableView() {
-        tableView.register(HomeTableViewCell.nib, forCellReuseIdentifier: "HomeTableViewCell")
+        tableView.register(HomeTableViewCell.nib, forCellReuseIdentifier: HomeTableViewCell.identifier)
+		tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
     }
 }
 
@@ -135,7 +156,7 @@ extension HomeViewController: UITableViewDataSource {
     }
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "HomeTableViewCell",
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.identifier,
                                                        for: indexPath) as? HomeTableViewCell,
             let viewModel = viewModel?.days[indexPath.row] else {
                 return UITableViewCell()

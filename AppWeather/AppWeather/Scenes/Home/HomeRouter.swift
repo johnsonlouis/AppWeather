@@ -33,5 +33,7 @@ class HomeRouter: NSObject, HomeDataPassing {
 extension HomeRouter: HomeRoutingLogic {
 
 	func routeToDetail() {
+		let detailsViewController = DetailsModule.makeView(with: dataStore?.cityId)
+		viewController?.navigationController?.pushViewController(detailsViewController, animated: true)
     }
 }

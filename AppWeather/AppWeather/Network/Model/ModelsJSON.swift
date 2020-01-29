@@ -38,8 +38,6 @@ struct ResultMainJSON: Decodable {
         case minTemperature = "temp_min"
         case maxTemperature = "temp_max"
         case pressure
-        case pressureSeaLevel = "sea_level"
-        case pressureGroundLevel = "grnd_level"
         case humidity
     }
 
@@ -48,8 +46,6 @@ struct ResultMainJSON: Decodable {
     let minTemperature: Float
     let maxTemperature: Float
     let pressure: Int // Atmospheric pressure on the sea level by default, hPa
-    let pressureSeaLevel: Int // Atmospheric pressure on the sea level, hPa
-    let pressureGroundLevel: Int // Atmospheric pressure on the ground level, hPa
     let humidity: Int
 }
 
@@ -69,7 +65,7 @@ struct WindJSON: Decodable {
         case speed, degrees = "deg"
     }
     let speed: Float
-    let degrees: Int // Wind direction, degrees (meteorological)
+    let degrees: Int? // Wind direction, degrees (meteorological)
 }
 
 struct CityJSON: Decodable {
@@ -91,4 +87,14 @@ struct CoordinateJSON: Decodable {
     }
     let latitutde: Double
     let longitude: Double
+}
+
+struct DetailsJSON: Decodable {
+	let id: Int
+	let name: String
+	let coord: CoordinateJSON
+	let weather: [WeatherJSON]
+	let main: ResultMainJSON
+	let wind: WindJSON
+	let cod: Int
 }

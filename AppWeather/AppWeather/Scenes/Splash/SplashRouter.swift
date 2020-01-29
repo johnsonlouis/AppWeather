@@ -29,7 +29,8 @@ class SplashRouter: NSObject, SplashDataPassing {
 
 extension SplashRouter: SplashRoutingLogic {
     func routeToHome() {
-        let homeViewController = HomeModule.makeView()
+		let parisCityId = 6455259
+		let homeViewController = HomeModule.makeView(with: parisCityId)
         viewController?.navigationController?.setViewControllers([homeViewController], animated: false)
     }
 }

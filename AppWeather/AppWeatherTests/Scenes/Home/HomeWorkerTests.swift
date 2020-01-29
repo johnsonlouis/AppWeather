@@ -27,14 +27,17 @@ class HomeWorkerTests: XCTestCase {
     // MARK: - Tests
 
     func test_fetchInfos_resource() throws {
+		// Given
+		let cityId = 1234
+
         // When
-        sut.fetchInfos { _ in }
+		sut.fetchInfos(cityId: cityId) { _ in }
 
         // Then
         XCTAssertEqual(networkMock.requestResource?.url, "https://api.openweathermap.org/data/2.5/forecast")
-        XCTAssertEqual(networkMock.requestResource?.parameters, ["id": "6455259",
+        XCTAssertEqual(networkMock.requestResource?.parameters, ["id": "1234",
                                                                  "appid": "5c9a5519f58bd542743e739b83ad4c2f",
-                                                                 "lang": "fr",
+                                                                 "lang": Locale.current.languageCode ?? "en",
                                                                  "units": "metric"])
         XCTAssertNil(networkMock.requestResource?.headers)
         XCTAssertEqual(networkMock.requestResource?.timeoutInterval, 60)
@@ -43,6 +46,8 @@ class HomeWorkerTests: XCTestCase {
 
     func test_fetchInfos_success() throws {
         // Given
+		let cityId = 1234
+
         let data = File.read(filename: "5days_mock")!
 
         let resultJSON = try JSONDecoder().decode(ResultJSON.self, from: data)
@@ -54,7 +59,7 @@ class HomeWorkerTests: XCTestCase {
         var expectedError: Error?
 
         // When
-        sut.fetchInfos { result in
+        sut.fetchInfos(cityId: cityId) { result in
             switch result {
             case .success(let decodable):
                 expectedValue = decodable
@@ -70,6 +75,8 @@ class HomeWorkerTests: XCTestCase {
 
     func test_fetchInfos_failure() throws {
         // Given
+		let cityId = 1234
+
         networkMock.requestClosure = { completionHandler in
             completionHandler(.failure(NetworkError.invalidRequest))
         }
@@ -78,7 +85,7 @@ class HomeWorkerTests: XCTestCase {
         var expectedError: Error?
 
         // When
-        sut.fetchInfos { result in
+        sut.fetchInfos(cityId: cityId) { result in
             switch result {
             case .success(let decodable):
                 expectedValue = decodable

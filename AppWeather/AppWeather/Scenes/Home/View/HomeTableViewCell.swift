@@ -17,11 +17,15 @@ struct HomeTableViewCellViewModel {
 
 class HomeTableViewCell: UITableViewCell {
 
+	// MARK: - Constant
+
+	static let identifier = "HomeTableViewCell"
+
 	private enum Constant {
 		enum Font {
-			static let dayLabel = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 24: 18)
-			static let maxLabel = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 24: 18)
-			static let minLabel = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 24: 18)
+			static let dayLabel = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 30: 18)
+			static let maxLabel = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 30: 18)
+			static let minLabel = UIFont(name: "HelveticaNeue", size: UIDevice.isIpad ? 30: 18)
 		}
 	}
 
@@ -38,7 +42,7 @@ class HomeTableViewCell: UITableViewCell {
 	// MARK: - Public
 
 	static var nib: UINib {
-		return UINib(nibName: "HomeTableViewCell", bundle: nil)
+		return UINib(nibName: HomeTableViewCell.identifier, bundle: nil)
 	}
 
 	func configure(viewModel: HomeTableViewCellViewModel) {

@@ -17,6 +17,8 @@ internal enum StoryboardScene {
 
     internal static let initialScene = InitialSceneType<SplashViewController>(storyboard: Main.self)
 
+    internal static let detailsViewController = SceneType<DetailsViewController>(storyboard: Main.self, identifier: "DetailsViewController")
+
     internal static let homeViewController = SceneType<HomeViewController>(storyboard: Main.self, identifier: "HomeViewController")
   }
 }

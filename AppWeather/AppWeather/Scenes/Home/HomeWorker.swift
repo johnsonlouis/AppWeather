@@ -13,7 +13,7 @@
 import UIKit
 
 protocol HomeWorkerProtocol {
-    func fetchInfos(completionHandler: @escaping (Result<HomeInfo, Error>) -> Void)
+    func fetchInfos(cityId: Int, completionHandler: @escaping (Result<HomeInfo, Error>) -> Void)
 }
 
 class HomeWorker {
@@ -33,11 +33,11 @@ class HomeWorker {
 
 extension HomeWorker: HomeWorkerProtocol {
 
-	func fetchInfos(completionHandler: @escaping (Result<HomeInfo, Error>) -> Void) {
+	func fetchInfos(cityId: Int, completionHandler: @escaping (Result<HomeInfo, Error>) -> Void) {
         let url = "https://api.openweathermap.org/data/2.5/forecast"
-        let parameters = ["id": "6455259",
+        let parameters = ["id": "\(cityId)",
                           "appid": "5c9a5519f58bd542743e739b83ad4c2f",
-                          "lang": "fr",
+						  "lang": Locale.current.languageCode ?? "en",
                           "units": "metric"]
         let ressource = NetworkResource(url: url, parameters: parameters)
         network.request(resource: ressource, type: ResultJSON.self) {

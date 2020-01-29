@@ -27,7 +27,7 @@ extension HomePresenter: HomePresentationLogic {
 
 	func presentFetchedContents(response: Home.FetchContents.Response) {
         let days = response.days.map {
-            Home.FetchContents.ViewModel.Days(name: $0.date.dayAsString,
+			Home.FetchContents.ViewModel.Days(name: $0.date.isToday ? L10n.Home.today : $0.date.dayAsString,
                                               max: String(format: "%.0f", $0.maxTemperature),
                                               min: String(format: "%.0f", $0.minTemperature),
 											  imageUrl: $0.iconUrl)

@@ -19,4 +19,8 @@ extension Date {
         DateFormatter.dateFormatter.dateFormat = "EEEE"
         return DateFormatter.dateFormatter.string(from: self)
     }
+
+	var isToday: Bool {
+		return Calendar.current.isDateInToday(self)
+	}
 }

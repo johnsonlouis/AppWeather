@@ -10,7 +10,7 @@ import UIKit
 
 enum HomeModule {
 
-    static func makeView() -> UIViewController {
+	static func makeView(with cityId: Int) -> UIViewController {
         let viewController = StoryboardScene.Main.homeViewController.instantiate()
         let worker = HomeWorker(network: Network())
         let interactor = HomeInteractor(worker: worker)
@@ -22,6 +22,7 @@ enum HomeModule {
         presenter.viewController = viewController
         router.viewController = viewController
         router.dataStore = interactor
+		router.dataStore?.cityId = cityId
         return viewController
     }
 }

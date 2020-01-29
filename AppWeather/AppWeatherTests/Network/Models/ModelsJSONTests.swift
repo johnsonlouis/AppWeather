@@ -57,8 +57,6 @@ class ResultJSONTests: XCTestCase {
         XCTAssertEqual(mainJSON.minTemperature, 6.69)
         XCTAssertEqual(mainJSON.maxTemperature, 8.03)
         XCTAssertEqual(mainJSON.pressure, 1015)
-        XCTAssertEqual(mainJSON.pressureSeaLevel, 1015)
-        XCTAssertEqual(mainJSON.pressureGroundLevel, 1005)
         XCTAssertEqual(mainJSON.humidity, 82)
     }
 
@@ -119,12 +117,12 @@ class ResultJSONTests: XCTestCase {
         let data = jsonString.data(using: .utf8)!
 
         // When
-        let cloudJSON = try JSONDecoder().decode(WindJSON.self, from: data)
+        let windJSON = try JSONDecoder().decode(WindJSON.self, from: data)
 
         // Then
-        XCTAssertNotNil(cloudJSON)
-        XCTAssertEqual(cloudJSON.speed, 3.78)
-        XCTAssertEqual(cloudJSON.degrees, 205)
+        XCTAssertNotNil(windJSON)
+        XCTAssertEqual(windJSON.speed, 3.78)
+        XCTAssertEqual(windJSON.degrees, 205)
     }
 
     func test_decode_city() throws {
@@ -183,4 +181,75 @@ class ResultJSONTests: XCTestCase {
         XCTAssertEqual(coordinateJSON.latitutde, 48.8565)
         XCTAssertEqual(coordinateJSON.longitude, 2.3524)
     }
+
+	func test_decode_details() throws {
+		let jsonString =
+		"""
+        {
+          "coord": {"lon": -122.08,"lat": 37.39},
+          "weather": [
+        	{
+        	  "id": 800,
+        	  "main": "Clear",
+        	  "description": "clear sky",
+        	  "icon": "01d"
+        	}
+          ],
+          "base": "stations",
+          "main": {
+        	"temp": 282.55,
+        	"feels_like": 281.86,
+        	"temp_min": 280.37,
+        	"temp_max": 284.26,
+        	"pressure": 1023,
+        	"humidity": 100
+          },
+          "visibility": 16093,
+          "wind": {
+        	"speed": 1.5,
+        	"deg": 350
+          },
+          "clouds": {
+        	"all": 1
+          },
+          "dt": 1560350645,
+          "sys": {
+        	"type": 1,
+        	"id": 5122,
+        	"message": 0.0139,
+        	"country": "US",
+        	"sunrise": 1560343627,
+        	"sunset": 1560396563
+          },
+          "timezone": -25200,
+          "id": 420006353,
+          "name": "Mountain View",
+          "cod": 200
+        }
+        """
+
+		let data = jsonString.data(using: .utf8)!
+
+		// When
+		let detailsJSON = try JSONDecoder().decode(DetailsJSON.self, from: data)
+
+		// Then
+		XCTAssertNotNil(detailsJSON)
+		XCTAssertNotNil(detailsJSON.coord)
+		XCTAssertEqual(detailsJSON.coord.latitutde, 37.39)
+		XCTAssertEqual(detailsJSON.coord.longitude, -122.08)
+		XCTAssertNotNil(detailsJSON.main)
+		XCTAssertEqual(detailsJSON.main.temperature, 282.55)
+		XCTAssertEqual(detailsJSON.main.feelsLike, 281.86)
+		XCTAssertEqual(detailsJSON.main.minTemperature, 280.37)
+		XCTAssertEqual(detailsJSON.main.maxTemperature, 284.26)
+		XCTAssertEqual(detailsJSON.main.pressure, 1023)
+		XCTAssertEqual(detailsJSON.main.humidity, 100)
+		XCTAssertNotNil(detailsJSON.wind)
+		XCTAssertEqual(detailsJSON.wind.speed, 1.5)
+		XCTAssertEqual(detailsJSON.wind.degrees, 350)
+		XCTAssertEqual(detailsJSON.cod, 200)
+		XCTAssertEqual(detailsJSON.name, "Mountain View")
+		XCTAssertEqual(detailsJSON.id, 420006353)
+	}
 }

@@ -6,7 +6,15 @@
   Copyright © 2020 Johnson-Richie Louis. All rights reserved.
 */
 "home.title" = "Accueil";
+"home.detail.button" = "Voir plus";
+"home.today" = "Aujourd'hui";
 "detail.title" = "Détails";
+"detail.min.temperature" = "Minimum";
+"detail.max.temperature" = "Maximum";
+"detail.feelslike" = "Ressenti";
+"detail.pressure" = "Pression";
+"detail.humidity" = "Humidité";
+"detail.wind" = "Vent";
 "alert.title" = "Erreur";
 "alert.message" = "Erreur lors de la récupération des données";
 "alert.action.title" = "Fermer";

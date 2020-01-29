@@ -21,3 +21,16 @@ struct DayInfo {
     let maxTemperature: Float
 	let iconUrl: String?
 }
+
+struct Detailnfo {
+	let name: String
+	let description: String?
+	let icon: String?
+	let temperature: Float
+	let minTemperature: Float
+	let maxTemperature: Float
+	let temperatureFeels: Float?
+	let pressure: Int
+	let humidity: Int
+	let windSpeed: Float
+}
