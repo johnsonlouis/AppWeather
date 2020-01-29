@@ -30,9 +30,3 @@ colors:
   outputs:
     - templateName: swift4
       output: Colors.swift
-fonts:
-  inputs:
-    - AppWeather/Resources/Fonts
-  outputs:
-    - templateName: swift4
-      output: Fonts.swift

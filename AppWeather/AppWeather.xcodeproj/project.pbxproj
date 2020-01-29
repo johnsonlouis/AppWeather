@@ -257,7 +257,6 @@
 				CED7D79223DDBE93001C63B1 /* Storyboards */,
 				CED7D79323DDBE93001C63B1 /* Assets.xcassets */,
 				CED7D79423DDBE93001C63B1 /* Colors */,
-				CED7D79623DDBE93001C63B1 /* Fonts */,
 				CED7D7F423DE62EF001C63B1 /* AppWeather-localizable.strings */,
 			);
 			path = Resources;
@@ -277,13 +276,6 @@
 				CED7D79523DDBE93001C63B1 /* colors.txt */,
 			);
 			path = Colors;
-			sourceTree = "<group>";
-		};
-		CED7D79623DDBE93001C63B1 /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Fonts;
 			sourceTree = "<group>";
 		};
 		CED7D79923DDBF74001C63B1 /* Generated */ = {
