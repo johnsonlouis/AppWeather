@@ -1,5 +1,5 @@
 //
-//  HomeWorker.swift
+//  HomeService.swift
 //  AppWeather
 //
 //  Created by Johnson-Riche Louis on 26/01/2020.
@@ -12,11 +12,11 @@
 
 import UIKit
 
-protocol HomeWorkerProtocol {
+protocol HomeModel {
     func fetchInfos(cityId: Int, completionHandler: @escaping (Result<HomeInfo, Error>) -> Void)
 }
 
-class HomeWorker {
+class HomeService {
 
     // MARK: - Property
 
@@ -29,9 +29,9 @@ class HomeWorker {
     }
 }
 
-// MARK: - HomeWorkerProtocol
+// MARK: - HomeModel
 
-extension HomeWorker: HomeWorkerProtocol {
+extension HomeService: HomeModel {
 
 	func fetchInfos(cityId: Int, completionHandler: @escaping (Result<HomeInfo, Error>) -> Void) {
         let url = "https://api.openweathermap.org/data/2.5/forecast"

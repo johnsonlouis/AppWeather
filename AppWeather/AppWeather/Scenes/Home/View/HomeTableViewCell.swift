@@ -66,16 +66,16 @@ class HomeTableViewCell: UITableViewCell {
 		contentView.backgroundColor = .clear
 		backgroundColor = .clear
 
-		dayLabel.textColor = ColorName.white.color
+		dayLabel.textColor = .appWhite
 		dayLabel.font = Constant.Font.dayLabel
 
-		maxLabel.textColor = ColorName.white.color
+		maxLabel.textColor = .appWhite
 		maxLabel.font = Constant.Font.maxLabel
 
-		minLabel.textColor = ColorName.white.color
+		minLabel.textColor = .appWhite
 		minLabel.font = Constant.Font.minLabel
 
-		iconImageView.tintColor = ColorName.white.color
+		iconImageView.tintColor = .appWhite
 
 		selectionStyle = .none
 	}

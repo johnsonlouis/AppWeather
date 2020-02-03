@@ -1,5 +1,5 @@
 //
-//  HomeWorkerTests.swift
+//  HomeModelTests.swift
 //  AppWeatherTests
 //
 //  Created by Johnson-Riche Louis on 27/01/2020.
@@ -9,13 +9,13 @@
 import XCTest
 @testable import AppWeather
 
-class HomeWorkerTests: XCTestCase {
-    var sut: HomeWorker!
+class HomeModelTests: XCTestCase {
+    var sut: HomeService!
     var networkMock: NetworkProtocolMock<ResultJSON>!
 
     override func setUp() {
         networkMock = NetworkProtocolMock()
-        sut = HomeWorker(network: networkMock)
+        sut = HomeService(network: networkMock)
         super.setUp()
     }
 

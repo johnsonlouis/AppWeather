@@ -1,12 +1,10 @@
 platform :ios, '10.0'
 
 target 'AppWeather' do
-	pod 'SwiftGen', '~> 6.1.0'
 	pod 'Kingfisher', '5.12.0'
 	pod 'SwiftLint', '~> 0.38.0'
 
 	target 'AppWeatherTests' do
-		pod 'Sourcery', '~>0.17.0'
 	end
 
 end

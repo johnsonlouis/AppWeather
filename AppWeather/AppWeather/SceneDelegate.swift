@@ -11,6 +11,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+	var appCoordinator: SplashCoordinator?
 
     // MARK: - UIWindowSceneDelegate
 
@@ -20,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
         }
         window = UIWindow(windowScene: windowScene)
-        self.window?.rootViewController = SplashModule.makeRoot()
-        self.window?.makeKeyAndVisible()
+		appCoordinator = SplashCoordinatorImpl(window: window)
+		appCoordinator?.startRoot()
     }
 }

@@ -12,16 +12,11 @@
 
 import UIKit
 
-protocol SplashDisplayLogic: class {
-    func displayContents(viewModel: Splash.FetchContents.ViewModel)
-}
-
 class SplashViewController: UIViewController {
 
 	// MARK: - Property
 
-	var interactor: SplashBusinessLogic?
-    var router: (NSObjectProtocol & SplashRoutingLogic & SplashDataPassing)?
+	var viewModel: SplashViewModel?
 
 	// MARK: - IBOutlet
 
@@ -36,25 +31,14 @@ class SplashViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-		view.backgroundColor = ColorName.blue.color
-        fetchContents()
+		view.backgroundColor = .appBlue
+        fetchDatas()
     }
 
 	// MARK: - Private
 
-    private func fetchContents() {
+    private func fetchDatas() {
 		indicatorView.isHidden = false
-        let request = Splash.FetchContents.Request()
-        interactor?.doSomething(request: request)
-    }
-}
-
-// MARK: - SplashDisplayLogic
-
-extension SplashViewController: SplashDisplayLogic {
-
-	func displayContents(viewModel: Splash.FetchContents.ViewModel) {
-		indicatorView.isHidden = true
-        router?.routeToHome()
+		viewModel?.fetchDatas()
     }
 }

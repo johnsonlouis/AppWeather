@@ -55,13 +55,13 @@ class DetailsCollectionViewCell: UICollectionViewCell {
 	// MARK: - Private
 
 	private func setupUI() {
-		placeholderLabel.textColor = ColorName.yellow.color
+		placeholderLabel.textColor = .appYellow
 		placeholderLabel.font = Constant.Font.Label.placeholder
 
-		nameLabel.textColor = ColorName.white.color
+		nameLabel.textColor = .appWhite
 		nameLabel.font = Constant.Font.Label.text
 
-		gradientView.backgroundColor = ColorName.black.color
+		gradientView.backgroundColor = .appBlack
 		gradientView.alpha = 0.25
 
 		backgroundColor = .clear

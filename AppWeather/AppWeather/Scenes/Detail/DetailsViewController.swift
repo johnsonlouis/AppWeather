@@ -12,9 +12,9 @@
 
 import UIKit
 
-protocol DetailsDisplayLogic: class {
-	func displayContents(viewModel: Details.FetchContents.ViewModel)
-	func displayFetchedContentsError(viewModel: Details.FetchContentsError.ViewModel)
+protocol DetailsView: class {
+	func update(viewModel: DetailsViewModel)
+	func updateError(viewModel: DetailsErrorViewModel)
 }
 
 class DetailsViewController: UIViewController {
@@ -44,9 +44,7 @@ class DetailsViewController: UIViewController {
 
 	// MARK: - Property
 
-	var interactor: DetailsBusinessLogic?
-	var router: (NSObjectProtocol & DetailsRoutingLogic & DetailsDataPassing)?
-	var viewModel: Details.FetchContents.ViewModel?
+	var viewModel: DetailsViewModel?
 
 	// MARK: - IBOutlet
 
@@ -72,16 +70,16 @@ class DetailsViewController: UIViewController {
 	// MARK: - Private
 
 	private func setupUI() {
-		view.backgroundColor = ColorName.blue.color
-		nameLabel.textColor = ColorName.white.color
+		view.backgroundColor = UIColor.appBlue
+		nameLabel.textColor = UIColor.appWhite
 		nameLabel.font = Constant.Font.Label.name
 		nameLabel.alpha = 0
 
-		descriptionLabel.textColor = ColorName.white.color
+		descriptionLabel.textColor = UIColor.appWhite
 		descriptionLabel.font = Constant.Font.Label.description
 		descriptionLabel.alpha = 0
 
-		temperatureLabel.textColor = ColorName.white.color
+		temperatureLabel.textColor = UIColor.appWhite
 		temperatureLabel.font = Constant.Font.Label.temperature
 		temperatureLabel.alpha = 0
 
@@ -90,23 +88,22 @@ class DetailsViewController: UIViewController {
 		collectionView.register(UINib(nibName: DetailsCollectionViewCell.identifier, bundle: nil),
 								forCellWithReuseIdentifier: DetailsCollectionViewCell.identifier)
 
-		let textAttributes = [NSAttributedString.Key.foregroundColor: ColorName.black.color]
+		let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appBlack]
 		navigationController?.navigationBar.titleTextAttributes = textAttributes
-		title = L10n.Detail.title
+		title = "detail.title".localized()
 	}
 
 	private func fetchContents() {
 		indicatorView.isHidden = false
-		let request = Details.FetchContents.Request()
-		interactor?.fetchContents(request: request)
+		viewModel?.fetchDatas()
 	}
 }
 
 // MARK: - DetailsDisplayLogic
 
-extension DetailsViewController: DetailsDisplayLogic {
+extension DetailsViewController: DetailsView {
 
-	func displayContents(viewModel: Details.FetchContents.ViewModel) {
+	func update(viewModel: DetailsViewModel) {
 		self.viewModel = viewModel
 		indicatorView.isHidden = true
 		nameLabel.text = viewModel.name
@@ -121,7 +118,7 @@ extension DetailsViewController: DetailsDisplayLogic {
 		collectionView.reloadData()
 	}
 
-	func displayFetchedContentsError(viewModel: Details.FetchContentsError.ViewModel) {
+	func updateError(viewModel: DetailsErrorViewModel) {
 		indicatorView.isHidden = true
 		let alert = UIAlertController(title: viewModel.title,
 									  message: viewModel.message,

@@ -12,9 +12,9 @@
 
 import UIKit
 
-protocol HomeDisplayLogic: class {
-    func displayFetchedContents(viewModel: Home.FetchContents.ViewModel)
-    func displayFetchedContentsError(viewModel: Home.FetchContentsError.ViewModel)
+protocol HomeView: class {
+    func update(viewModel: HomeViewModel)
+    func updateError(viewModel: HomeErrorViewModel)
 }
 
 class HomeViewController: UIViewController {
@@ -38,9 +38,7 @@ class HomeViewController: UIViewController {
 
 	// MARK: - Property
 
-	var interactor: HomeBusinessLogic?
-    var router: (NSObjectProtocol & HomeRoutingLogic & HomeDataPassing)?
-    private var viewModel: Home.FetchContents.ViewModel?
+	var viewModel: HomeViewModel?
 
 	// MARK: - IBOutlet
 
@@ -68,28 +66,27 @@ class HomeViewController: UIViewController {
 	// MARK: - IBAction
 
 	@IBAction func didTapDetail(_ sender: Any) {
-		router?.routeToDetail()
+		viewModel?.didTapDetail()
 	}
 
 	// MARK: - Private
 
 	private func fetchContent() {
 		indicatorView.isHidden = false
-        let request = Home.FetchContents.Request()
-        interactor?.fetchContents(request: request)
+        viewModel?.fetchDatas()
     }
 
 	private func setupUI() {
-        view.backgroundColor = ColorName.blue.color
-        nameLabel.textColor = ColorName.white.color
+		view.backgroundColor = .appBlue
+        nameLabel.textColor = .appWhite
 		nameLabel.font = Constant.Font.Label.name
         nameLabel.alpha = 0
 
-		descriptionLabel.textColor = ColorName.white.color
+		descriptionLabel.textColor = .appWhite
 		descriptionLabel.font = Constant.Font.Label.description
         descriptionLabel.alpha = 0
 
-		temperatureLabel.textColor = ColorName.white.color
+		temperatureLabel.textColor = .appWhite
 		temperatureLabel.font = Constant.Font.Label.temperature
         temperatureLabel.alpha = 0
 
@@ -97,16 +94,16 @@ class HomeViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.alpha = 0
 
-		detailButton.backgroundColor = ColorName.white.color
+		detailButton.backgroundColor = .appWhite
 		detailButton.layer.cornerRadius = detailButton.bounds.height / 2
 		detailButton.layer.masksToBounds = true
-		detailButton.setTitle(L10n.Home.Detail.button, for: .normal)
-		detailButton.setTitleColor(ColorName.blue.color, for: .normal)
+		detailButton.setTitle("home.detail.button".localized(), for: .normal)
+		detailButton.setTitleColor(.appBlue, for: .normal)
 		detailButton.titleLabel?.font = Constant.Font.Button.detail
 
-		let textAttributes = [NSAttributedString.Key.foregroundColor: ColorName.black.color]
+		let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appBlack]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
-		title = L10n.Home.title
+		title = "home.title".localized()
     }
 
 	private func setupTableView() {
@@ -117,9 +114,9 @@ class HomeViewController: UIViewController {
 
 // MARK: - HomeDisplayLogic
 
-extension HomeViewController: HomeDisplayLogic {
+extension HomeViewController: HomeView {
 
-	func displayFetchedContents(viewModel: Home.FetchContents.ViewModel) {
+	func update(viewModel: HomeViewModel) {
         self.viewModel = viewModel
 		indicatorView.isHidden = true
         nameLabel.text = viewModel.name
@@ -134,7 +131,7 @@ extension HomeViewController: HomeDisplayLogic {
         tableView.reloadData()
     }
 
-	func displayFetchedContentsError(viewModel: Home.FetchContentsError.ViewModel) {
+	func updateError(viewModel: HomeErrorViewModel) {
 		indicatorView.isHidden = true
         let alert = UIAlertController(title: viewModel.title,
                                       message: viewModel.message,

@@ -12,11 +12,11 @@
 
 import UIKit
 
-protocol DetailsWorkerProtocol {
+protocol DetailsModel {
 	func fetch(cityId: Int, completionHandler: @escaping (Result<Detailnfo, Error>) -> Void)
 }
 
-class DetailsWorker {
+class DetailsService {
 
 	// MARK: - Property
 
@@ -31,7 +31,7 @@ class DetailsWorker {
 
 // MARK: - DetailsWorkerProtocol
 
-extension DetailsWorker: DetailsWorkerProtocol {
+extension DetailsService: DetailsModel {
 
 	func fetch(cityId: Int, completionHandler: @escaping (Result<Detailnfo, Error>) -> Void) {
 		let url = "https://api.openweathermap.org/data/2.5/weather"
